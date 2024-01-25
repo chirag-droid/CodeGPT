@@ -1,0 +1,16 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "CodeGPT",
+    "name_for_model": "ChatGPT plugin for analysing code",
+    "description_for_human": "Analyse your github code, with the help of AI",
+    "description_for_model": "Help the users analyse and search through their code, giving them helpful insights and an understanding of the codebase",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "https://chirag-droid.github.io/codegpt/spec.yaml"
+    },
+    "logo_url": "https://chirag-droid.github.io/codegpt/logo.png",
+    "contact_email": "chirag.singla.pi@gmail.com"
+}

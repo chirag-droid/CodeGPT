@@ -1,0 +1,612 @@
+---
+openapi: 3.0.3
+info:
+  version: 1.1.4
+  title: GitHub v3 REST API
+  description: GitHub's v3 REST API.
+  license:
+    name: MIT
+    url: https://spdx.org/licenses/MIT
+  termsOfService: https://docs.github.com/articles/github-terms-of-service
+  contact:
+    name: Support
+    url: https://support.github.com/contact?tags=dotcom-rest-api
+  x-github-plan: api.github.com
+tags:
+- name: actions
+  description: Endpoints to manage GitHub Actions using the REST API.
+- name: activity
+  description: Activity APIs provide access to notifications, subscriptions, and timelines.
+- name: apps
+  description: Information for integrations and installations.
+- name: billing
+  description: Monitor charges and usage from Actions and Packages.
+- name: checks
+  description: Rich interactions with checks run by your integrations.
+- name: code-scanning
+  description: Retrieve code scanning alerts from a repository.
+- name: codes-of-conduct
+  description: Insight into codes of conduct for your communities.
+- name: codespaces
+  description: Endpoints to manage Codespaces using the REST API.
+- name: emojis
+  description: List emojis available to use on GitHub.
+- name: enterprise-admin
+  description: Administer a GitHub enterprise.
+- name: dependabot
+  description: Endpoints to manage Dependabot.
+- name: dependency-graph
+  description: Endpoints to access Dependency Graph features.
+- name: gists
+  description: View, modify your gists.
+- name: git
+  description: Raw Git functionality.
+- name: gitignore
+  description: View gitignore templates
+- name: interactions
+  description: Owner or admin management of users interactions.
+- name: issues
+  description: Interact with GitHub Issues.
+- name: licenses
+  description: View various OSS licenses.
+- name: markdown
+  description: Render GitHub flavored markdown
+- name: merge-queue
+  description: Interact with GitHub Merge Queues.
+- name: meta
+  description: Endpoints that give information about the API.
+- name: migrations
+  description: Move projects to or from GitHub.
+- name: orgs
+  description: Interact with GitHub Orgs.
+- name: packages
+  description: Manage packages for authenticated users and organizations.
+- name: projects
+  description: Interact with GitHub Projects.
+- name: pulls
+  description: Interact with GitHub Pull Requests.
+- name: rate-limit
+  description: Check your current rate limit status
+- name: reactions
+  description: Interact with reactions to various GitHub entities.
+- name: repos
+  description: Interact with GitHub Repos.
+- name: search
+  description: Look for stuff on GitHub.
+- name: secret-scanning
+  description: Retrieve secret scanning alerts from a repository.
+- name: server-statistics
+  description: GHES statistics
+- name: teams
+  description: Interact with GitHub Teams.
+- name: users
+  description: Interact with and view information about users and also current user.
+servers:
+- url: https://api.github.com/
+paths:
+  "/repos/{owner}/{repo}/contents/{path}":
+    get:
+      summary: Get repository content
+      description: "Gets the contents of a file or directory in a repository. Specify
+        the file path or directory in `:path`. If you omit\n`:path`, you will receive
+        the contents of the repository's root directory. See the description below
+        regarding what the API response includes for directories. \n\nFiles and symlinks
+        support [a custom media type](https://docs.github.com/rest/reference/repos#custom-media-types)
+        for\nretrieving the raw content or rendered HTML (when supported). All content
+        types support [a custom media\ntype](https://docs.github.com/rest/reference/repos#custom-media-types)
+        to ensure the content is returned in a consistent\nobject format.\n\n**Notes**:\n*
+        \  To get a repository's contents recursively, you can [recursively get the
+        tree](https://docs.github.com/rest/reference/git#trees).\n*   This API has
+        an upper limit of 1,000 files for a directory. If you need to retrieve more
+        files, use the [Git Trees\nAPI](https://docs.github.com/rest/reference/git#get-a-tree).\n
+        *  Download URLs expire and are meant to be used just once. To ensure the
+        download URL does not expire, please use the contents API to obtain a fresh
+        download URL for each download.\n#### Size limits\nIf the requested file's
+        size is:\n* 1 MB or smaller: All features of this endpoint are supported.\n*
+        Between 1-100 MB: Only the `raw` or `object` [custom media types](https://docs.github.com/rest/repos/contents#custom-media-types-for-repository-contents)
+        are supported. Both will work as normal, except that when using the `object`
+        media type, the `content` field will be an empty string and the `encoding`
+        field will be `\"none\"`. To get the contents of these larger files, use the
+        `raw` media type.\n * Greater than 100 MB: This endpoint is not supported.\n\n####
+        If the content is a directory\nThe response will be an array of objects, one
+        object for each item in the directory.\nWhen listing the contents of a directory,
+        submodules have their \"type\" specified as \"file\". Logically, the value\n_should_
+        be \"submodule\". This behavior exists in API v3 [for backwards compatibility
+        purposes](https://git.io/v1YCW).\nIn the next major version of the API, the
+        type will be returned as \"submodule\".\n\n#### If the content is a symlink
+        \nIf the requested `:path` points to a symlink, and the symlink's target is
+        a normal file in the repository, then the\nAPI responds with the content of
+        the file (in the format shown in the example. Otherwise, the API responds
+        with an object \ndescribing the symlink itself.\n\n#### If the content is
+        a submodule\nThe `submodule_git_url` identifies the location of the submodule
+        repository, and the `sha` identifies a specific\ncommit within the submodule
+        repository. Git uses the given URL when cloning the submodule repository,
+        and checks out\nthe submodule at that specific commit.\n\nIf the submodule
+        repository is not hosted on github.com, the Git URLs (`git_url` and `_links[\"git\"]`)
+        and the\ngithub.com URLs (`html_url` and `_links[\"html\"]`) will have null
+        values."
+      tags:
+      - repos
+      operationId: repos/get-content
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/reference/repos#get-repository-content
+      parameters:
+      - "$ref": "#/components/parameters/owner"
+      - "$ref": "#/components/parameters/repo"
+      - name: path
+        description: path parameter
+        in: path
+        required: true
+        schema:
+          type: string
+        x-multi-segment: true
+      - name: ref
+        description: 'The name of the commit/branch/tag. Default: the repository’s
+          default branch (usually `master`)'
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Response
+          content:
+            application/vnd.github.object:
+              schema:
+                "$ref": "#/components/schemas/content-tree"
+            application/json:
+              schema:
+                oneOf:
+                - "$ref": "#/components/schemas/content-directory"
+                - "$ref": "#/components/schemas/content-file"
+                - "$ref": "#/components/schemas/content-symlink"
+                - "$ref": "#/components/schemas/content-submodule"
+        '404':
+          "$ref": "#/components/responses/not_found"
+        '403':
+          "$ref": "#/components/responses/forbidden"
+        '302':
+          "$ref": "#/components/responses/found"
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: repos
+        subcategory: contents
+components:
+  schemas:
+    content-directory:
+      title: Content Directory
+      description: A list of directory items
+      type: array
+      items:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - dir
+            - file
+            - submodule
+            - symlink
+          size:
+            type: integer
+          name:
+            type: string
+          path:
+            type: string
+          content:
+            type: string
+          sha:
+            type: string
+          url:
+            type: string
+            format: uri
+          git_url:
+            type: string
+            format: uri
+            nullable: true
+          html_url:
+            type: string
+            format: uri
+            nullable: true
+          download_url:
+            type: string
+            format: uri
+            nullable: true
+          _links:
+            type: object
+            properties:
+              git:
+                type: string
+                format: uri
+                nullable: true
+              html:
+                type: string
+                format: uri
+                nullable: true
+              self:
+                type: string
+                format: uri
+            required:
+            - git
+            - html
+            - self
+        required:
+        - _links
+        - git_url
+        - html_url
+        - download_url
+        - name
+        - path
+        - sha
+        - size
+        - type
+        - url
+    content-file:
+      title: Content File
+      description: Content File
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - file
+        encoding:
+          type: string
+        size:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        content:
+          type: string
+        sha:
+          type: string
+        url:
+          type: string
+          format: uri
+        git_url:
+          type: string
+          format: uri
+          nullable: true
+        html_url:
+          type: string
+          format: uri
+          nullable: true
+        download_url:
+          type: string
+          format: uri
+          nullable: true
+        _links:
+          type: object
+          properties:
+            git:
+              type: string
+              format: uri
+              nullable: true
+            html:
+              type: string
+              format: uri
+              nullable: true
+            self:
+              type: string
+              format: uri
+          required:
+          - git
+          - html
+          - self
+        target:
+          type: string
+          example: '"actual/actual.md"'
+        submodule_git_url:
+          type: string
+          example: '"git://example.com/defunkt/dotjs.git"'
+      required:
+      - _links
+      - git_url
+      - html_url
+      - download_url
+      - name
+      - path
+      - sha
+      - size
+      - type
+      - url
+      - content
+      - encoding
+    content-symlink:
+      title: Symlink Content
+      description: An object describing a symlink
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - symlink
+        target:
+          type: string
+        size:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        sha:
+          type: string
+        url:
+          type: string
+          format: uri
+        git_url:
+          type: string
+          format: uri
+          nullable: true
+        html_url:
+          type: string
+          format: uri
+          nullable: true
+        download_url:
+          type: string
+          format: uri
+          nullable: true
+        _links:
+          type: object
+          properties:
+            git:
+              type: string
+              format: uri
+              nullable: true
+            html:
+              type: string
+              format: uri
+              nullable: true
+            self:
+              type: string
+              format: uri
+          required:
+          - git
+          - html
+          - self
+      required:
+      - _links
+      - git_url
+      - html_url
+      - download_url
+      - name
+      - path
+      - sha
+      - size
+      - type
+      - url
+      - target
+    content-submodule:
+      title: Submodule Content
+      description: An object describing a submodule
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - submodule
+        submodule_git_url:
+          type: string
+          format: uri
+        size:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        sha:
+          type: string
+        url:
+          type: string
+          format: uri
+        git_url:
+          type: string
+          format: uri
+          nullable: true
+        html_url:
+          type: string
+          format: uri
+          nullable: true
+        download_url:
+          type: string
+          format: uri
+          nullable: true
+        _links:
+          type: object
+          properties:
+            git:
+              type: string
+              format: uri
+              nullable: true
+            html:
+              type: string
+              format: uri
+              nullable: true
+            self:
+              type: string
+              format: uri
+          required:
+          - git
+          - html
+          - self
+      required:
+      - _links
+      - git_url
+      - html_url
+      - download_url
+      - name
+      - path
+      - sha
+      - size
+      - type
+      - url
+      - submodule_git_url
+    content-tree:
+      title: Content Tree
+      description: Content Tree
+      type: object
+      properties:
+        type:
+          type: string
+        size:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        sha:
+          type: string
+        url:
+          type: string
+          format: uri
+        git_url:
+          type: string
+          format: uri
+          nullable: true
+        html_url:
+          type: string
+          format: uri
+          nullable: true
+        download_url:
+          type: string
+          format: uri
+          nullable: true
+        entries:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              size:
+                type: integer
+              name:
+                type: string
+              path:
+                type: string
+              content:
+                type: string
+              sha:
+                type: string
+              url:
+                type: string
+                format: uri
+              git_url:
+                type: string
+                format: uri
+                nullable: true
+              html_url:
+                type: string
+                format: uri
+                nullable: true
+              download_url:
+                type: string
+                format: uri
+                nullable: true
+              _links:
+                type: object
+                properties:
+                  git:
+                    type: string
+                    format: uri
+                    nullable: true
+                  html:
+                    type: string
+                    format: uri
+                    nullable: true
+                  self:
+                    type: string
+                    format: uri
+                required:
+                - git
+                - html
+                - self
+            required:
+            - _links
+            - git_url
+            - html_url
+            - download_url
+            - name
+            - path
+            - sha
+            - size
+            - type
+            - url
+        _links:
+          type: object
+          properties:
+            git:
+              type: string
+              format: uri
+              nullable: true
+            html:
+              type: string
+              format: uri
+              nullable: true
+            self:
+              type: string
+              format: uri
+          required:
+          - git
+          - html
+          - self
+      required:
+      - _links
+      - git_url
+      - html_url
+      - download_url
+      - name
+      - path
+      - sha
+      - size
+      - type
+      - url
+      - content
+      - encoding
+    basic-error:
+      title: Basic Error
+      description: Basic Error
+      type: object
+      properties:
+        message:
+          type: string
+        documentation_url:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+  parameters:
+    owner:
+      name: owner
+      description: The account owner of the repository. The name is not case sensitive.
+      in: path
+      required: true
+      schema:
+        type: string
+    repo:
+      name: repo
+      description: The name of the repository. The name is not case sensitive.
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    not_found:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/basic-error"
+    forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/basic-error"
+    found:
+      description: Found

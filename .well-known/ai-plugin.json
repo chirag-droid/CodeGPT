@@ -9,8 +9,8 @@
     },
     "api": {
         "type": "openapi",
-        "url": "https://chirag-droid.github.io/codegpt/spec.yaml"
+        "url": "https://chirag-droid.github.io/CodeGPT/spec.yaml"
     },
-    "logo_url": "https://chirag-droid.github.io/codegpt/logo.png",
+    "logo_url": "https://chirag-droid.github.io/CodeGPT/logo.png",
     "contact_email": "chirag.singla.pi@gmail.com"
 }
